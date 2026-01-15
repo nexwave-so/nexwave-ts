@@ -76,11 +76,21 @@ async function main() {
   // Register all commands
   registerCommands(program);
 
-  // Parse arguments
-  try {
-    await program.parseAsync(process.argv);
-  } catch (err) {
-    handleError(err, program.opts().verbose);
+  // If no arguments, launch interactive mode
+  if (process.argv.length <= 2) {
+    try {
+      const { startInteractiveMode } = await import('../src/interactive');
+      await startInteractiveMode();
+    } catch (err) {
+      handleError(err);
+    }
+  } else {
+    // Parse arguments
+    try {
+      await program.parseAsync(process.argv);
+    } catch (err) {
+      handleError(err, program.opts().verbose);
+    }
   }
 }
 
