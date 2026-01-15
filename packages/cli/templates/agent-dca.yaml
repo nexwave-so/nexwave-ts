@@ -1,0 +1,32 @@
+# Nexwave Agent Template: Dollar-Cost Averaging
+# Usage: nexwave agent create -f agent-dca.yaml
+
+name: SOL Weekly DCA
+description: Buy SOL every Monday at 9 AM UTC
+
+intentTemplate:
+  action:
+    type: EXCHANGE
+  inputs:
+    - symbol: USDC
+      amount: "100000000"   # $100 (6 decimals)
+      decimals: 6
+  output:
+    symbol: SOL
+    decimals: 9
+  constraints:
+    maxSlippageBps: 100     # 1% max slippage
+    maxFee: "50000"
+  urgency: NORMAL
+  deadlineSeconds: 120
+
+schedule:
+  cron: "0 9 * * MON"       # Every Monday at 9:00 UTC
+
+limits:
+  maxExecutionsPerDay: 1
+  maxDailyNotional: "100000000"
+  circuitBreakerThreshold: 3
+
+adapters:
+  - fusionamm

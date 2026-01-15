@@ -1,0 +1,26 @@
+# Nexwave Intent Template: Market Swap
+# Usage: nexwave intent submit -f intent-swap.yaml
+
+action:
+  type: EXCHANGE
+
+inputs:
+  - symbol: USDC
+    amount: "1000000000"  # 1,000 USDC (6 decimals)
+    decimals: 6
+
+output:
+  symbol: SOL
+  decimals: 9
+
+constraints:
+  maxSlippageBps: 50      # 0.5% max slippage
+  maxFee: "100000"        # Max priority fee (optional)
+
+urgency: NORMAL           # LOW | NORMAL | HIGH
+deadlineSeconds: 60       # Seconds until intent expires
+
+metadata:
+  label: "Example swap"
+  tags:
+    source: "cli-template"

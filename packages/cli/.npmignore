@@ -1,0 +1,13 @@
+src/
+bin/
+tsconfig.json
+tsup.config.ts
+.env*
+*.log
+node_modules/
+.turbo/
+coverage/
+*.test.ts
+*.spec.ts
+.vscode/
+.idea/

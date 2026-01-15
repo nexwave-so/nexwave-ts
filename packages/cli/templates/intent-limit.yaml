@@ -1,0 +1,28 @@
+# Nexwave Intent Template: Limit Order
+# Usage: nexwave intent submit -f intent-limit.yaml
+
+action:
+  type: LIMIT_ORDER
+  side: BUY              # BUY | SELL
+  limitPrice: "95500000000"  # 95.50 (scaled by 1e9)
+
+inputs:
+  - symbol: USDC
+    amount: "100000000"   # 100 USDC (6 decimals)
+    decimals: 6
+
+output:
+  symbol: SOL
+  decimals: 9
+
+constraints:
+  maxSlippageBps: 50
+  minOutput: "1047120"    # Minimum output amount (optional)
+
+urgency: NORMAL
+deadlineSeconds: 3600     # 1 hour for limit orders
+
+metadata:
+  label: "Buy SOL at 95.50"
+  tags:
+    strategy: "limit-order"

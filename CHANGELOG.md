@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Initial release of `@nexwave/cli`
+  - Full-featured command-line interface for Nexwave
+  - Authentication commands (login, logout, status)
+  - Intent management (submit, status, list, cancel, validate)
+  - Agent management (create, list, start, stop, logs, delete)
+  - Market data commands (quote, state, watch)
+  - Execution control (queue, metrics, kill, pause, resume)
+  - System commands (health, config, info)
+  - Configuration management (set, get, list, reset)
+  - Quick shortcuts (swap, limit orders)
+  - Shell completions (bash, zsh)
+  - Multiple output formats (table, JSON, YAML)
+  - Secure credential storage with keytar/keychain fallback
+  - Rich error handling with helpful suggestions
+  - Template files for intents and agents
+
 ## [0.1.0-alpha.1] - 2026-01-XX
 
 ### Added
