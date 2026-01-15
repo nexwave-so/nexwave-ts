@@ -38,10 +38,16 @@ bun-debug.log*
 
 # Environment variables
 .env
+.env.*
 .env.local
+.env.development
 .env.development.local
-.env.test.local
+.env.production
 .env.production.local
+.env.test
+.env.test.local
+.env.staging
+.env.staging.local
 .env*.local
 
 # IDE - VSCode
