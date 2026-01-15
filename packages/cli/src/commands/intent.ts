@@ -3,6 +3,7 @@ import { readFileSync } from 'fs';
 import { parse as parseYaml } from 'yaml';
 import ora from 'ora';
 import { getClient } from '../lib/client';
+import { resolveFilePath } from '../lib/paths';
 import { formatOutput, success, formatStatus, formatId, formatRelativeTime } from '../lib/output';
 import { handleError } from '../lib/errors';
 import { parseInput } from '../lib/utils';
@@ -65,8 +66,9 @@ export function registerIntentCommands(program: Command): void {
 
         // Parse intent from file, JSON, or stdin
         if (options.file) {
-          const content = readFileSync(options.file, 'utf-8');
-          intentData = options.file.endsWith('.json')
+          const filePath = resolveFilePath(options.file);
+          const content = readFileSync(filePath, 'utf-8');
+          intentData = filePath.endsWith('.json')
             ? JSON.parse(content)
             : parseYaml(content);
         } else if (options.json) {
@@ -299,8 +301,9 @@ export function registerIntentCommands(program: Command): void {
         let intentData: unknown;
 
         if (options.file) {
-          const content = readFileSync(options.file, 'utf-8');
-          intentData = options.file.endsWith('.json')
+          const filePath = resolveFilePath(options.file);
+          const content = readFileSync(filePath, 'utf-8');
+          intentData = filePath.endsWith('.json')
             ? JSON.parse(content)
             : parseYaml(content);
         } else if (options.json) {

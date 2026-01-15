@@ -5,6 +5,7 @@ import ora from 'ora';
 import chalk from 'chalk';
 import prompts from 'prompts';
 import { getClient } from '../lib/client';
+import { resolveFilePath } from '../lib/paths';
 import {
   formatOutput,
   success,
@@ -176,8 +177,9 @@ export function registerAgentCommands(program: Command): void {
         let configData: unknown;
 
         if (options.file) {
-          const content = readFileSync(options.file, 'utf-8');
-          configData = options.file.endsWith('.json')
+          const filePath = resolveFilePath(options.file);
+          const content = readFileSync(filePath, 'utf-8');
+          configData = filePath.endsWith('.json')
             ? JSON.parse(content)
             : parseYaml(content);
         } else if (options.json) {
