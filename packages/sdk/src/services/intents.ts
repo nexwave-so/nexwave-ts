@@ -174,7 +174,7 @@ export class IntentService {
     if (!validation.success) {
       throw new ValidationError(
         'Invalid intent',
-        validation.error.errors.map((e) => ({
+        validation.error.errors.map((e: { path: (string | number)[]; message: string }) => ({
           field: e.path.join('.'),
           message: e.message,
         }))
@@ -201,7 +201,7 @@ export class IntentService {
     if (!validation.success) {
       throw new ValidationError(
         'Invalid intent',
-        validation.error.errors.map((e) => ({
+        validation.error.errors.map((e: { path: (string | number)[]; message: string }) => ({
           field: e.path.join('.'),
           message: e.message,
         }))

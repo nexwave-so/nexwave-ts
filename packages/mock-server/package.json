@@ -1,8 +1,36 @@
 {
   "name": "@nexwave/mock-server",
   "version": "0.1.0-alpha.1",
+  "description": "Development mock server for testing Nexwave SDK",
   "type": "module",
   "main": "./src/index.ts",
+  "bin": {
+    "nexwave-mock-server": "./bin/cli.js"
+  },
+  "files": [
+    "src",
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nexwave-io/nexwave-ts.git",
+    "directory": "packages/mock-server"
+  },
+  "homepage": "https://github.com/nexwave-io/nexwave-ts/tree/main/packages/mock-server",
+  "bugs": {
+    "url": "https://github.com/nexwave-io/nexwave-ts/issues"
+  },
+  "author": "Nexwave <hello@nexwave.io>",
+  "license": "MIT",
+  "keywords": [
+    "nexwave",
+    "mock",
+    "server",
+    "testing",
+    "development"
+  ],
   "scripts": {
     "dev": "bun run --hot src/index.ts",
     "start": "bun run src/index.ts",
@@ -15,5 +43,11 @@
   "devDependencies": {
     "@types/bun": "latest",
     "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

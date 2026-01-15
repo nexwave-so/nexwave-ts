@@ -1,15 +1,43 @@
 {
   "name": "nexwave-ts",
+  "version": "0.1.0",
   "private": true,
+  "description": "TypeScript SDK monorepo for Nexwave",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nexwave-io/nexwave-ts.git"
+  },
+  "homepage": "https://nexwave.io",
+  "bugs": {
+    "url": "https://github.com/nexwave-io/nexwave-ts/issues"
+  },
+  "author": "Nexwave <hello@nexwave.io>",
+  "license": "MIT",
+  "keywords": [
+    "nexwave",
+    "defi",
+    "solana",
+    "intent",
+    "execution",
+    "trading",
+    "sdk",
+    "typescript"
+  ],
   "workspaces": ["packages/*", "examples"],
   "scripts": {
     "build": "bun run --filter '*' build",
     "test": "bun run --filter '*' test",
     "lint": "bun run --filter '*' lint",
-    "typecheck": "bun run --filter '*' typecheck"
+    "typecheck": "bun run --filter '*' typecheck",
+    "clean": "rm -rf packages/*/dist",
+    "prepublishOnly": "bun run build && bun run test"
   },
   "devDependencies": {
     "typescript": "^5.3.0",
     "@types/bun": "latest"
-  }
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "packageManager": "bun@1.0.0"
 }
