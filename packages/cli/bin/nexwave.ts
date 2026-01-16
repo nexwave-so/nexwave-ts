@@ -1,4 +1,15 @@
 #!/usr/bin/env node
+// Load environment variables from .env file
+import { config } from 'dotenv';
+import { resolve } from 'path';
+
+// Try to load .env from project root (for monorepo) or current directory
+const envPath = resolve(process.cwd(), '.env');
+config({ path: envPath });
+// Also try loading from workspace root (two levels up from packages/cli)
+const workspaceEnvPath = resolve(process.cwd(), '../../.env');
+config({ path: workspaceEnvPath });
+
 import { program } from 'commander';
 import { readFileSync } from 'fs';
 import { join } from 'path';

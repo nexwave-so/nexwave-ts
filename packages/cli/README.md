@@ -106,6 +106,9 @@ source ~/.zshrc
 |----------|-------------|
 | `NEXWAVE_ENDPOINT` | API endpoint URL |
 | `NEXWAVE_API_KEY` | API key (nxw_...) |
+| `OPENROUTER_API_KEY` | OpenRouter API key for natural language parsing (optional) |
+| `OPENROUTER_MODEL` | Model to use (default: `anthropic/claude-3.5-sonnet`) |
+| `OPENROUTER_BASE_URL` | OpenRouter API base URL (default: `https://openrouter.ai/api/v1`) |
 
 ## Output Formats
 

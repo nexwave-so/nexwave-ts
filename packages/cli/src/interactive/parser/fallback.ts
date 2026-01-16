@@ -144,6 +144,6 @@ export function parseWithRules(input: string): ParsedAction | null {
     };
   }
 
-  // No match - return null to fall through to Claude
+  // No match - return null to fall through to OpenRouter
   return null;
 }

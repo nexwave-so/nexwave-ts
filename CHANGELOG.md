@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Initial release of `@nexwave/cli`
+  - Interactive agentic mode with natural language parsing via OpenRouter
+  - Support for multiple LLM models through OpenRouter API
+  - Automatic .env file loading with dotenv
+  - Rule-based parser fallback for common commands (no API required)
   - Template path resolution - automatically resolves `templates/` paths relative to package directory
   - Development default credentials - auto-uses `localhost:8080` with `nxw_test_example` for local testing
   - Path resolution utility for handling template and file paths
@@ -18,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - CLI now automatically uses development credentials when no explicit credentials are set
 - Template paths (e.g., `templates/agent-dca.yaml`) now work from any directory
+- Refactored from Claude AI SDK to OpenRouter for flexible model selection
+- Interactive mode now loads environment variables from .env files automatically
   - Full-featured command-line interface for Nexwave
   - Authentication commands (login, logout, status)
   - Intent management (submit, status, list, cancel, validate)

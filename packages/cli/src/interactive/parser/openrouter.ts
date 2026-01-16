@@ -128,15 +128,41 @@ Parse schedules:
 - "hourly" = intervalMs: 3600000
 - "every 4 hours" = intervalMs: 14400000`;
 
-export async function parseWithClaude(
+interface OpenRouterConfig {
+  apiKey: string;
+  model?: string;
+  baseURL?: string;
+}
+
+/**
+ * Get OpenRouter configuration from environment variables
+ */
+function getOpenRouterConfig(): OpenRouterConfig | null {
+  const apiKey = process.env.OPENROUTER_API_KEY;
+  if (!apiKey || apiKey.trim().length === 0) {
+    return null;
+  }
+
+  return {
+    apiKey,
+    model: process.env.OPENROUTER_MODEL || 'anthropic/claude-3.5-sonnet',
+    baseURL: process.env.OPENROUTER_BASE_URL || 'https://openrouter.ai/api/v1',
+  };
+}
+
+/**
+ * Parse user input using OpenRouter API
+ */
+export async function parseWithOpenRouter(
   input: string,
   context: ParserContext
 ): Promise<ParsedAction> {
-  // Check if API key is available
-  if (!process.env.ANTHROPIC_API_KEY) {
+  const config = getOpenRouterConfig();
+  
+  if (!config) {
     return {
       action: 'ERROR',
-      error: 'ANTHROPIC_API_KEY not set. Set it to use natural language parsing, or use simple commands like "swap 100 USDC to SOL"',
+      error: 'OPENROUTER_API_KEY not set. Set it to use natural language parsing, or use simple commands like "swap 100 USDC to SOL"',
       suggestions: [
         'swap 100 USDC to SOL',
         'show my agents',
@@ -146,42 +172,94 @@ export async function parseWithClaude(
   }
 
   try {
-    const { default: Anthropic } = await import('@anthropic-ai/sdk');
-    const anthropic = new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY,
-    });
-
     const contextMessage = context.context.lastAction
       ? `\n\nLast action: ${JSON.stringify(context.context.lastAction)}`
       : '';
 
-    const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1024,
-      system: SYSTEM_PROMPT,
-      messages: [
-        {
-          role: 'user',
-          content: `${input}${contextMessage}`,
-        },
-      ],
+    const response = await fetch(`${config.baseURL}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${config.apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://nexwave.so',
+        'X-Title': 'Nexwave CLI',
+      },
+      body: JSON.stringify({
+        model: config.model,
+        messages: [
+          {
+            role: 'system',
+            content: SYSTEM_PROMPT,
+          },
+          {
+            role: 'user',
+            content: `${input}${contextMessage}`,
+          },
+        ],
+        temperature: 0.3,
+        max_tokens: 1024,
+        response_format: { type: 'json_object' },
+      }),
     });
 
-    const content = response.content[0];
-    if (content.type !== 'text') {
-      return { action: 'ERROR', error: 'Unexpected response type' };
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('OpenRouter API error:', response.status, errorText);
+      return {
+        action: 'ERROR',
+        error: `API request failed: ${response.status}`,
+        suggestions: [
+          'swap 100 USDC to SOL',
+          'show my agents',
+          'create a DCA agent',
+        ],
+      };
+    }
+
+    const data = await response.json() as {
+      choices?: Array<{
+        message?: {
+          content?: string;
+        };
+      }>;
+    };
+    const content = data.choices?.[0]?.message?.content;
+
+    if (!content) {
+      return {
+        action: 'ERROR',
+        error: 'No response from API',
+      };
     }
 
     // Parse JSON from response
-    const jsonMatch = content.text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      return { action: 'ERROR', error: 'Could not parse response' };
+    let parsed: ParsedAction;
+    try {
+      parsed = JSON.parse(content);
+    } catch (parseError) {
+      // Try to extract JSON from markdown code blocks or plain text
+      const jsonMatch = content.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        parsed = JSON.parse(jsonMatch[0]);
+      } else {
+        return {
+          action: 'ERROR',
+          error: 'Could not parse response as JSON',
+        };
+      }
     }
 
-    const parsed = JSON.parse(jsonMatch[0]);
+    // Validate that it's a ParsedAction
+    if (!parsed.action) {
+      return {
+        action: 'ERROR',
+        error: 'Invalid response format',
+      };
+    }
+
     return parsed as ParsedAction;
   } catch (error) {
-    console.error('Claude parse error:', error);
+    console.error('OpenRouter parse error:', error);
     return {
       action: 'ERROR',
       error: 'Failed to understand. Try being more specific.',
